@@ -49,4 +49,4 @@ The three "happens before" guarantees in the [[http://golang.org/ref/mem][Go Mem
 
 - "A receive from an unbuffered channel happens before the send on that channel completes."
 
-We have no guarantee (as of Go 1.1) that a send to full channel does not complete before the corresponding receive. The last example is not guaranteed to function as a proper semaphore.
+We have no guarantee (as of Go 1.1) that a send to full channel does not complete before any further receives. The last example is not guaranteed to function as a proper semaphore.
