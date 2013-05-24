@@ -37,7 +37,7 @@ We've added some more database initialization, but GetConnection usage doesn't c
 
 .code badpattern.go /START OMIT/,/END OMIT/
 
-We can get rid of the initialization by reversing the direction of our Semaphore channel usage. That's good, right?
+We can get rid of the initialization by reversing the direction of our semaphore channel usage. That's good, right?
 
 * Maybe not
 
@@ -49,4 +49,4 @@ The three "happens before" guarantees in the [[http://golang.org/ref/mem][Go Mem
 
 - "A receive from an unbuffered channel happens before the send on that channel completes."
 
-We have no guarantee (as of Go 1.1) that a send to full channel does not complete before the corresponding receive. The last example is not guaranteed to function as a proper Semaphore.
+We have no guarantee (as of Go 1.1) that a send to full channel does not complete before the corresponding receive. The last example is not guaranteed to function as a proper semaphore.
