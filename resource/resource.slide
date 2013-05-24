@@ -1,0 +1,52 @@
+Resource Management
+Go concurrency bootcamp #2
+23 May 2013
+Tags: concurrency, bootcamp
+
+Author: Joel Eidsath
+joel@gammafn.com
+http://gammafn.com/cv
+
+* There are limits to everything
+
+Life, money, time, database connections.
+
+.play limit.go /START OMIT/,/END OMIT/
+
+* What is GetConnection doing wrong?
+
+.play limit.go /START2 OMIT/,/END2 OMIT/
+
+It always gives out a connection whenever asked. In a resource-limited world, this is bad.
+
+* What if GetConnection blocked instead?
+
+.play limit2.go /START OMIT/,/END OMIT/
+
+* Usage remains the same!
+
+.play limit2.go /START2 OMIT/,/END2 OMIT/
+
+We've added some more database initialization, but GetConnection usage doesn't change. Nice!
+
+* Here is the pattern (The Go Semaphore)
+
+.code pattern.go /START OMIT/,/END OMIT/
+
+* Addendum: What's wrong with this?
+
+.code badpattern.go /START OMIT/,/END OMIT/
+
+We can get rid of the initialization by reversing the direction of our Semaphore channel usage. That's good, right?
+
+* Maybe not
+
+The three "happens before" guarantees in the [[http://golang.org/ref/mem][Go Memory Model]]:
+
+- "A send on a channel happens before the corresponding receive from that channel completes."
+
+- "The closing of a channel happens before a receive that returns a zero value because the channel is closed."
+
+- "A receive from an unbuffered channel happens before the send on that channel completes."
+
+We have no guarantee (as of Go 1.1) that a send to full channel does not complete before the corresponding receive. The last example is not guaranteed to function as a proper Semaphore.
