@@ -1,0 +1,36 @@
+Workgroups
+Go concurrency bootcamp #1
+21:38 23 May 2013
+Tags: concurrency, bootcamp
+
+Author: Joel Eidsath
+Consultant, GammaFn
+joel@gammafn.com
+
+* Title of slide or section (must have asterisk)
+
+Some Text
+
+** Subsection
+
+- bullets
+- more bullets
+- a bullet with
+
+*** Sub-subsection
+
+Some More text
+
+  Preformatted text
+  is indented (however you like)
+
+Further Text, including invocations like:
+
+.code x.go /^func main/,/^}/
+.play y.go
+.image image.jpg
+.iframe http://foo
+.link http://foo label
+.html file.html
+
+Again, more text
