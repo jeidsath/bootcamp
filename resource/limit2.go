@@ -8,26 +8,34 @@ import (
 type Connection struct {
 }
 
+func (*Connection) activate() {}
+
+func (*Connection) deactivate() {}
+
 type Database struct {
-	availableConnections chan bool
+	availableConnections chan *Connection
 }
 
 // START OMIT
 
-func (db *Database) Initialize() {
+func (db *Database) Initialize(numConnections int) {
+	db.availableConnections = make(chan *Connection, numConnections)
 	for ii := 0; ii < cap(db.availableConnections); ii++ {
-		db.availableConnections <- true
+		db.availableConnections <- new(Connection)
 	}
 }
 
 func (db *Database) GetConnection() *Connection {
-	<-db.availableConnections
-	fmt.Printf("Connection used. %d connections left.\n", len(db.availableConnections))
-	return new(Connection)
+	conn := <-db.availableConnections
+	fmt.Printf("Connection used. %d connections left.\n",
+		len(db.availableConnections))
+	conn.activate()
+	return conn
 }
 
 func (db *Database) ReturnConnection(conn *Connection) {
-	db.availableConnections <- true
+	conn.deactivate()
+	db.availableConnections <- conn
 }
 
 // END OMIT
@@ -35,8 +43,8 @@ func (db *Database) ReturnConnection(conn *Connection) {
 // START2 OMIT
 
 func main() {
-	db := Database{make(chan bool, 10)} // 10 connections available
-	db.Initialize()
+	db := Database{}
+	db.Initialize(10)            // 10 connections available
 	for ii := 0; ii < 11; ii++ { // But this loop goes up to 11!
 		go func() {
 			for {

@@ -3,12 +3,9 @@ package main
 type Resource struct {
 }
 
-func (*ResourceManager) getResourceFromPool() *Resource {
-	return new(Resource)
-}
+func (*Resource) activate() {}
 
-func (*ResourceManager) returnResourceToPool(rr *Resource) {
-}
+func (*Resource) destroy() {}
 
 // START OMIT
 
@@ -17,17 +14,19 @@ type ResourceManager struct {
 	availableResources chan bool
 }
 
-func (rm *ResourceManager) Initialize() {
-	//Does nothing
+func (rm *ResourceManager) Initialize(numResources int) {
+	rm.availableResources = make(chan bool, numResources)
 }
 
 func (rm *ResourceManager) GetResource() *Resource {
 	rm.availableResources <- true
-	return rm.getResourceFromPool()
+	rr := new(Resource)
+	rr.activate()
+	return rr
 }
 
 func (rm *ResourceManager) ReturnResource(rr *Resource) {
-	rm.returnResourceToPool(rr)
+	rr.destroy()
 	<-rm.availableResources
 }
 

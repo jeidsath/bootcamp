@@ -3,34 +3,33 @@ package main
 type Resource struct {
 }
 
-func (*ResourceManager) getResourceFromPool() *Resource {
-	return new(Resource)
-}
+func (*Resource) activate() {}
 
-func (*ResourceManager) returnResourceToPool(rr *Resource) {
-}
+func (*Resource) deactivate() {}
 
 // START OMIT
 
 type ResourceManager struct {
 	//Buffered channel with capacity == max available resources
-	availableResources chan bool
+	availableResources chan *Resource
 }
 
-func (rm *ResourceManager) Initialize() {
+func (rm *ResourceManager) Initialize(numResources int) {
+	rm.availableResources = make(chan *Resource, numResources)
 	for ii := 0; ii < cap(rm.availableResources); ii++ {
-		rm.availableResources <- true
+		rm.availableResources <- new(Resource)
 	}
 }
 
 func (rm *ResourceManager) GetResource() *Resource {
-	<-rm.availableResources
-	return rm.getResourceFromPool()
+	rr := <-rm.availableResources
+	rr.activate()
+	return rr
 }
 
 func (rm *ResourceManager) ReturnResource(rr *Resource) {
-	rm.returnResourceToPool(rr)
-	rm.availableResources <- true
+	rr.deactivate()
+	rm.availableResources <- rr
 }
 
 // END OMIT
