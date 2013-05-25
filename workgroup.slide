@@ -1,21 +1,11 @@
 Workgroups
-Go concurrency bootcamp #1
+Go concurrency bootcamp #3
 23 May 2013
 Tags: concurrency, bootcamp
 
 Author: Joel Eidsath
 joel@gammafn.com
 http://gammafn.com/cv
-
-* Why is Go great?
-
-We can run more than one thing at once!
-
-.play simple.go /START OMIT/,/END OMIT/
-
-* Channels
-
-Know when they block
 
 * The Problem
 

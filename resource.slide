@@ -11,31 +11,31 @@ http://gammafn.com/cv
 
 Life, money, time, database connections.
 
-.play limit.go /START OMIT/,/END OMIT/
+.play resource/limit.go /START OMIT/,/END OMIT/
 
 * What is GetConnection doing wrong?
 
-.play limit.go /START2 OMIT/,/END2 OMIT/
+.play resource/limit.go /START2 OMIT/,/END2 OMIT/
 
 It always gives out a connection whenever asked. In a resource-limited world, this is bad.
 
 * What if GetConnection blocked instead?
 
-.play limit2.go /START OMIT/,/END OMIT/
+.play resource/limit2.go /START OMIT/,/END OMIT/
 
 * Usage remains the same!
 
-.play limit2.go /START2 OMIT/,/END2 OMIT/
+.play resource/limit2.go /START2 OMIT/,/END2 OMIT/
 
 We've added some more database initialization, but GetConnection usage doesn't change. Nice!
 
 * Here is the pattern (The Go Semaphore)
 
-.code pattern.go /START OMIT/,/END OMIT/
+.code resource/pattern.go /START OMIT/,/END OMIT/
 
 * Addendum: What's wrong with this?
 
-.code badpattern.go /START OMIT/,/END OMIT/
+.code resource/badpattern.go /START OMIT/,/END OMIT/
 
 We can get rid of the initialization by reversing the direction of our semaphore channel usage. That's good, right?
 

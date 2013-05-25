@@ -1,0 +1,32 @@
+Channels
+Go concurrency bootcamp #1
+23 May 2013
+Tags: concurrency, bootcamp
+
+Author: Joel Eidsath
+joel@gammafn.com
+http://gammafn.com/cv
+
+* Why is Go great?
+
+We can run more than one function at once!
+
+.play simple.go /START OMIT/,/END OMIT/
+
+* Channels
+
+I used to be very confused by the two types of channels!
+
+- Unbuffered channels
+
+- Buffered channels
+
+Why does everything have to be so complicated?!?
+
+* Unbuffered channels
+
+Unbuffered channels don't have any place for an element to wait around before getting used. So an unbuffered channel blocks on data coming out (receive from).
+
+* Buffered channels
+
+Buffered channels block on
