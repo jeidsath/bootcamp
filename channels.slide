@@ -11,22 +11,85 @@ http://gammafn.com/cv
 
 We can run more than one function at once!
 
-.play simple.go /START OMIT/,/END OMIT/
+.play channels/simple.go /START OMIT/,/END OMIT/
 
 * Channels
 
+The "go func" invocations in the last example -- _goroutines_ -- need to be able to talk to each other. In Go, we do this with _channels_. 
+
+* Channels pt. 2
+
+The two "sayit" functions each wait for a send to the cc channel. One function accepts that send and executes. Similarly, the sends from main() wait for a receiver before proceeding. Synchronization achieved!
+
+.play channels/simple2.go /START OMIT/,/END OMIT/
+
+* Channels pt. 3
+
 I used to be very confused by the two types of channels!
 
-- Unbuffered channels
+.code channels/channel_types.go /START OMIT/,/END OMIT/
 
-- Buffered channels
+Ugh. Are these supposed to be like C arrays?
 
 Why does everything have to be so complicated?!?
 
+* Blocking
+
+Learn blocking and you will understand channel buffering.
+
+A goroutine runs until it _blocks_. For now, this means that a goroutine runs until it has to read from or write to a channel.
+
+If the channel is not ready to accept or output data, the goroutine blocks.
+
+The point of a channel is not what it stores, but its synchronization properties. Ie., the most important thing about a channel is when it blocks.
+
+* Blocking example
+
+.play channels/blocking.go /START OMIT/,/END OMIT/
+
 * Unbuffered channels
 
-Unbuffered channels don't have any place for an element to wait around before getting used. So an unbuffered channel blocks on data coming out (receive from).
+From the last example, we learn that:
+
+- Receives to an unbuffered channel block until there is a goroutine waiting to send.
+- Sends to an unbuffered channel block until there is a goroutine waiting to receive.
 
 * Buffered channels
 
-Buffered channels block on
+Buffered channels have two more rules. We can receive from a buffered channel if:
+
+- There is a blocked goroutine waiting to send
+- There is data in the buffer
+
+We can send to a channel if:
+
+- There is a blocked goroutine waiting to receive
+- The buffer is not full
+
+The properties of buffered channels are useful when we want to limit the number of things going on at once.
+
+* Buffered channels example
+
+In this case we get a panic because too much memory is used!
+
+.play channels/buffered_crash.go /START OMIT/,/END OMIT/
+
+* Buffered channels example
+
+Now we only run three heavyProcessing(int) routines at once. See the Resources bootcamp for more on this technique.
+
+.play channels/buffered_works.go /START OMIT/,/END OMIT/
+
+* Closed channels
+
+These is actually one last rule for receiving from a channel. We can always receive from a buffered or unbuffered channel if it is closed. The receive returns a zero value for the channel type and the error value is set to false.
+
+.play channels/closed.go /START OMIT/,/END OMIT/
+
+* Sending and Receiving. A discussion about terminology
+
+The Go documentation and community discussion groups often talk about "sends on" a channel and "receives on" a channel. 
+
+Do they mean sends to a channel? Or a channel sending to something else? Is the channel receiving data? Or is data being received from the channel?
+
+In the Go documentation, _a_channel_is_always_the_object_of_the_verbs_send_and_receive_. Therefore, we send to a channel, or we receive from a channel. A channel never "sends to" anything else. Hopefully this terminology will be cleaned up eventually!
