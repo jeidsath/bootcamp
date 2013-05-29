@@ -23,7 +23,7 @@ One way to solve this would be to use what we already know about channels.
 
 * Is it really what we want?
 
-We now have a magic number `const`processes`int`=`10` that needs to be kept track of. This is clearly suboptimal. 
+We now have a magic number `const`processes`int`=`10` that needs to be kept track of. This is suboptimal. 
 
 And what do we do when we don't know the magic number at compile time?
 
