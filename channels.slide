@@ -17,13 +17,13 @@ We can run more than one function at once!
 
 The "go func" invocations in the last example -- _goroutines_ -- need to be able to talk to each other. In Go, we do this with _channels_. 
 
-* Channels pt. 2
+* Synchronization with channels
 
 The two "sayit" functions each wait for a send to the cc channel. One function accepts that send and executes. Similarly, the sends from main() wait for a receiver before proceeding. Synchronization achieved!
 
 .play channels/simple2.go /START OMIT/,/END OMIT/
 
-* Channels pt. 3
+* Buffered and unbuffered channels
 
 I used to be very confused by the two types of channels!
 
@@ -35,13 +35,13 @@ Why does everything have to be so complicated?!?
 
 * Blocking
 
-Learn blocking and you will understand channel buffering.
+Channel buffering is simple once we understand blocking.
 
-A goroutine runs until it _blocks_. For now, this means that a goroutine runs until it has to read from or write to a channel.
+A goroutine runs until it _blocks_. For now, let's say this means that a goroutine runs until it has to read from or write to a channel.
 
 If the channel is not ready to accept or output data, the goroutine blocks.
 
-The point of a channel is not what it stores, but its synchronization properties. Ie., the most important thing about a channel is when it blocks.
+The point of a channel is not _what_ it stores, but _when_ it blocks.
 
 * Blocking example
 
@@ -49,7 +49,7 @@ The point of a channel is not what it stores, but its synchronization properties
 
 * Unbuffered channels
 
-From the last example, we learn that:
+The last example was an unbuffered channel. The two things to remember are:
 
 - Receives to an unbuffered channel block until there is a goroutine waiting to send.
 - Sends to an unbuffered channel block until there is a goroutine waiting to receive.
@@ -68,15 +68,15 @@ We can send to a channel if:
 
 The properties of buffered channels are useful when we want to limit the number of things going on at once.
 
-* Buffered channels example
+* Resource exhaustion
 
-In this case we get a panic because too much memory is used!
+Without a limit on resource usage, we get panic in this code because too much memory is used!
 
 .play channels/buffered_crash.go /START OMIT/,/END OMIT/
 
-* Buffered channels example
+* Solution through a buffered channel
 
-Now we only run three heavyProcessing(int) routines at once. See the Resources bootcamp for more on this technique.
+Now we only run three heavy processing routines at once. See the Resources bootcamp (#2) for more on this technique.
 
 .play channels/buffered_works.go /START OMIT/,/END OMIT/
 
@@ -85,6 +85,8 @@ Now we only run three heavyProcessing(int) routines at once. See the Resources b
 These is actually one last rule for receiving from a channel. We can always receive from a buffered or unbuffered channel if it is closed. The receive returns a zero value for the channel type and the error value is set to false.
 
 .play channels/closed.go /START OMIT/,/END OMIT/
+
+The error value can be checked manually, but what this really allows us to do is to use the `range` keyword to iterate through a channel.
 
 * Sending and Receiving. A discussion about terminology
 

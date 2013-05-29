@@ -20,8 +20,8 @@ func foo(cc chan int) {
 func main() {
 	cc := make(chan int)
 	qq := make(chan int)
-	go bar(cc, qq) // It doesn't matter that we start bar or foo first
-	go foo(cc)     // Output will be "foobar"
+	go bar(cc, qq) // It doesn't matter that we start bar or foo first // HL
+	go foo(cc)     // Output will be "foobar" // HL
 
 	<-qq // Block waiting for func bar // HL
 }
