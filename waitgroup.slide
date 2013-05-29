@@ -1,0 +1,56 @@
+Waitgroups
+Go concurrency bootcamp #3
+29 May 2013
+Tags: concurrency, bootcamp
+
+Author: Joel Eidsath
+joel@gammafn.com
+http://gammafn.com/cv
+
+* The Problem
+
+Goroutines don't know when to quit!
+
+.play waitgroup/dontstop.go /START OMIT/,/END OMIT/
+
+On a single core, none of the doWorkInParallel functions complete before the end of main is reached (and the end of the program). Go has a simple rule about goroutines that are still hanging around at program exit: Terminate!
+
+* Channel-only solution
+
+One way to solve this would be to use what we already know about channels.
+
+.play waitgroup/channelstop.go /START OMIT/,/END OMIT/
+
+* Is it really what we want?
+
+We now have a magic number `const`processes`int`=`10` that needs to be kept track of. This is clearly suboptimal. 
+
+And what do we do when we don't know the magic number at compile time?
+
+.play waitgroup/dontstop2.go /START OMIT/,/END OMIT/
+
+* Channel-only solution
+
+It starts to get complicated if we stick to channels.
+
+.play waitgroup/channelstop2.go /START OMIT/,/END OMIT/
+
+* Continued...
+
+.play waitgroup/channelstop2.go /START2 OMIT/,/END2 OMIT/
+
+* sync.WaitGroup
+
+While some of the routines provided in the sync package are low-level, there are two that are provided for high-level code. The one that we plan to use here is sync.WaitGroup. 
+
+It provides three methods: `Add()` to increment the waitgroup counter, `Done()` to decrement it, and `Wait()` to block until all processes are complete. 
+
+* sync.WaitGroup example
+
+.play waitgroup/waitgroup.go /START OMIT/,/END OMIT/
+
+Pretty simple!
+
+* Web Crawler 
+
+Did you have trouble with [[http://tour.golang.org/#70][Go Tour #70]]? Try using sync.WaitGroup!
